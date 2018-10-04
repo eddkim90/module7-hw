@@ -5,16 +5,17 @@
     angular.module('ShoppingListCheckOff', [])
         .controller('ToBuyController', ToBuyController)
         .controller('AlreadyBoughtController', AlreadyBoughtController)
+        .filter('TripleDollarFilter', TripleDollarFilter)
         .service('ShoppingListCheckOffService', ShoppingListCheckOffService);
 
     // Pre-Populated Groceries
     var toBuyGroceries = [
-        { name: "Pepsi", quantity: 10 },
-        { name: "Oreos", quantity: 2 },
-        { name: "Beyond Meat Burger Patties", quantity: 3 },
-        { name: "Chicken Breast", quantity: 1 },
-        { name: "Broccoli", quantity: 1 },
-        { name: "Tomatoes", quantity: 3 }
+        { name: "Pepsi", quantity: 10, pricePerItem: 3.99 },
+        { name: "Oreos", quantity: 2, pricePerItem: 4.99 },
+        { name: "Beyond Meat Burger Patties", quantity: 3 , pricePerItem: 5.16},
+        { name: "Chicken Breast", quantity: 1, pricePerItem: 12.34 },
+        { name: "Broccoli", quantity: 1, pricePerItem: 4.99 },
+        { name: "Tomatoes", quantity: 3, pricePerItem: 1.34 }
     ];
 
     // Bought Groceries Array
@@ -25,12 +26,11 @@
     function ToBuyController(ShoppingListCheckOffService) {
         var itemAdder = this;
 
-        itemAdder.itemName = "";
-        itemAdder.itemQuantity = "";
         itemAdder.toBuyGroceries = ShoppingListCheckOffService.displayAllToBuy();
         itemAdder.moveGrocery = function(itemIndex) { ShoppingListCheckOffService.moveGrocery(itemIndex); };
-        itemAdder.listCount = function() {
-            ShoppingListCheckOffService.listCount(toBuyGroceries);
+        itemAdder.calculateTotalPrice = function(itemIndex) {
+            var currentItem = toBuyGroceries[itemIndex];
+            return ShoppingListCheckOffService.calculateTotalPrice(currentItem);
         };
     }
 
@@ -39,12 +39,10 @@
     function AlreadyBoughtController(ShoppingListCheckOffService) {
         var itemBought = this;
 
-        itemBought.itemName = "";
-        itemBought.itemQuantity = "";
         itemBought.boughtGroceries = ShoppingListCheckOffService.displayAllBought();
-        itemBought.listCount = function() {
-            ShoppingListCheckOffService.listCount(boughtGroceries);
-        };
+        itemBought.calculateTotalPrice = function(item) {
+            return ShoppingListCheckOffService.calculateTotalPrice(item);
+        }
     }
 
     // Shopping List Check-Off Service
@@ -62,26 +60,31 @@
 
         // Display all the groceries to buy
         service.displayAllToBuy = function() {
-            console.log("ToBuy Groceries: " + toBuyGroceries);
             return toBuyGroceries;
         };
 
         // Display all the groceries bought
         service.displayAllBought = function() {
-            console.log("Bought Groceries: " + boughtGroceries);
             return boughtGroceries;
-        };
-
-        // Item Count
-        service.itemCount = function(list) {
-            return list.length;
         };
 
         // Move From ToBuy to Bought
         service.moveGrocery = function(indexPosition) {
             boughtGroceries.push(toBuyGroceries[indexPosition]);
             toBuyGroceries.splice(indexPosition, 1);
-        }
+        };
+
+        // Calculate Total Price
+        service.calculateTotalPrice = function(item) {
+            return item.pricePerItem * item.quantity;
+        };
+    }
+
+    // Custom Triple Dollar Filter
+    function TripleDollarFilter() {
+        return function(input, numOfDollarSigns, decimalPlaces) {
+            return numOfDollarSigns + input.toFixed(decimalPlaces);
+        };
     }
 
 })();

@@ -36,6 +36,10 @@
         <ul>
             <li ng-repeat="item in toBuy.toBuyGroceries">
                 Buy {{ item.quantity }} {{ item.name }}
+                <span>
+                    <input type="text" ng-model="list.pricePerItem"
+                           placeholder="{{ toBuy.calculateTotalPrice($index) | currency: '$' : 2}}">
+                </span>
                 <button ng-click="toBuy.moveGrocery($index)" class="btn btn-default">
                     <span class="glyphicon glyphicon-ok"> Bought</span>
                 </button>
@@ -48,7 +52,8 @@
     <div class="col-md-6" ng-controller="AlreadyBoughtController as bought">
         <h2>Already Bought:</h2>
         <ul>
-            <li ng-repeat="item in bought.boughtGroceries">Bought {{item.quantity}} {{item.name}}</li>
+            <li ng-repeat="item in bought.boughtGroceries">Bought {{item.quantity}} {{item.name}} for total price of
+               {{ bought.calculateTotalPrice(item) | TripleDollarFilter: '$$$' : 2 }} </li>
         </ul>
         <div ng-if="!bought.boughtGroceries.length" class="emptyMessage">Nothing bought yet.</div>
     </div>
