@@ -37,8 +37,7 @@
             <li ng-repeat="item in toBuy.toBuyGroceries">
                 Buy {{ item.quantity }} {{ item.name }}
                 <span>
-                    <input type="text" ng-model="list.pricePerItem"
-                           placeholder="{{ toBuy.calculateTotalPrice($index) | currency: '$' : 2}}">
+                    <input type="text" value="{{ item.quantity }} ">
                 </span>
                 <button ng-click="toBuy.moveGrocery($index)" class="btn btn-default">
                     <span class="glyphicon glyphicon-ok"> Bought</span>
