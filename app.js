@@ -25,9 +25,14 @@
     ToBuyController.$inject = ['ShoppingListCheckOffService'];
     function ToBuyController(ShoppingListCheckOffService) {
         var itemAdder = this;
+        
+        itemAdder.quantity = "";
 
         itemAdder.toBuyGroceries = ShoppingListCheckOffService.displayAllToBuy();
-        itemAdder.moveGrocery = function(itemIndex) { ShoppingListCheckOffService.moveGrocery(itemIndex); };
+        itemAdder.moveGrocery = function(itemIndex) { 
+            console.log(itemAdder.quantity);
+            ShoppingListCheckOffService.moveGrocery(itemIndex); 
+        };
         itemAdder.calculateTotalPrice = function(itemIndex) {
             var currentItem = toBuyGroceries[itemIndex];
             return ShoppingListCheckOffService.calculateTotalPrice(currentItem);
