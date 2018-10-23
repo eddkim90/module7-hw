@@ -75,6 +75,7 @@
 
         // Move From ToBuy to Bought
         service.moveGrocery = function(indexPosition) {
+            console.log(toBuyGroceries[indexPosition]);
             boughtGroceries.push(toBuyGroceries[indexPosition]);
             toBuyGroceries.splice(indexPosition, 1);
         };
